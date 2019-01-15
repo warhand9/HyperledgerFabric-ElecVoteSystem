@@ -8,7 +8,7 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", index)
+	mux.Handle("/", http.FileServer(http.Dir("templates")))
 
 	server.ListenAndServe(":8080", nil)
 }
