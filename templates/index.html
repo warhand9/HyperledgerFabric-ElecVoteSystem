@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Elect Vote System </title>
+    <script>
+        var id_value, pw_value;
+
+        function login() {
+            var id_lable = document.getElementById("id_text");
+            var pw_lable = document.getElementById("pw_text");
+
+            id_value = id_lable.value
+            pw_value = pw_lable.value
+
+            id_lable.value ="";
+            pw_lable.value="";
+
+            makeRequest();
+        }
+        function membership() {
+            location.href("membership.html");
+        }
+        function find_account() {}
+
+        function makeRequest() {
+            /*var httpRequest = new XMLHttpRequest();
+            var url = '/login';
+            httpRequest.open('POST', url);*/
+        }
+
+    </script>
+    </head>
+    <body>
+        <h3> Elec Vote System</h3>
+        <form action="/login" method="POST" enctype="application/x-www-form-urlencoded">
+            ID : <input type="text" id="id_text" name="userID" value="" size=10> <br>
+            PW : <input type="password" id="pw_text" name="userPW" value="" size=10> <br>
+        
+
+        <input type="submit" value="LOG IN">&nbsp;&nbsp;&nbsp; 
+	</form>
+        <input type="button" value="MEMBERSHIP" onclick="membership()">&nbsp;&nbsp;&nbsp;
+        <input type="button" value="FIND ID/PW" onclick="find_account()">
+    </body>
+</html>
+
