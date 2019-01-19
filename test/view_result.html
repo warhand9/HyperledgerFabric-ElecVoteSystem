@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+			//document.write("test" + {{.}}+ "<br>");
+            var jsonString = {{.}};
+            //document.write(jsonString);
+            var voteResult = JSON.parse(jsonString);
+
+            //var testObj = voteResult.Vote_Results[0];
+            //document.write(testObj.User_responses[0].Name);
+
+            function User_response(name, region, response)
+            {
+                this.name = name;
+                this.region = region;
+                this.response = response;
+            }
+            function Vote(name, startDate, endDate, user_responses)
+			{
+				// Vote Object attributes
+				this.name = name;
+				this.startDate = startDate;
+				this.endDate = endDate;
+				this.user_responses = user_responses;
+			}
+
+            function compare_date(voteEndDate)  // curEndDate :: "2019/01/17" format
+            {
+                var curdate = new Date()   // 2019/1/1
+                curdate.setFullYear(2019,0,1);
+                
+                var tempdate = voteEndDate.split("/");
+                var end_year = parseInt(tempdate[0]);
+                var end_month = parseInt(tempdate[1]) - 1;   // javascript Date Object's month is Array format
+                var end_day = parseInt(tempdate[2]);
+
+                var enddate = new Date();
+                enddate.setFullYear(end_year, end_month, end_day);
+
+                if(curdate <= enddate) {
+                    return 0;
+                }
+                else {
+                    return 1;
+                }
+            }
+
+		</script>
+	</head>
+
+	<body>	
+
+        <script>
+            //document.write(jsonString + "<br>");
+            //document.write(voteResult.Vote_Results.length + "<br>");
+            var ongoing_votes = new Array();
+			var ended_votes = new Array();
+			var o=0, e=0;
+			for(var i=0; i<voteResult.Vote_Results.length; i++) {
+                // vote JSON object
+                var temp_vote = voteResult.Vote_Results[i];
+
+                // compare Vote_EndDate with current_date
+				if(compare_date(temp_vote.EndDate)== 0) {
+
+                    // make User_responses Array about this Vote
+                    var temp_user_responses = new Array();
+                    for(var j=0; j<temp_vote.User_responses.length; j++){
+                        temp_user_responses[j] = new User_response(temp_vote.User_responses[j].Name, temp_vote.User_responses[j].Region, temp_vote.User_responses[j].Response);
+                    }
+
+					ongoing_votes[o++] = new Vote(temp_vote.Name, temp_vote.StartDate, temp_vote.EndDate, temp_user_responses);
+				}
+
+                // vote date expired
+                else{
+                    var temp_user_responses = new Array();
+                    for(var j=0; j<temp_vote.User_responses.length; j++){
+                        temp_user_responses[j] = new User_response(temp_vote.User_responses[j].Name, temp_vote.User_responses[j].Region, temp_vote.User_responses[j].Response);
+                    }
+
+					ended_votes[e++] = new Vote(temp_vote.Name, temp_vote.StartDate, temp_vote.EndDate, temp_user_responses);
+                }  
+
+			}
+
+            document.write("<h2>ongoing votes</h2>");
+            for(var i=0; i<ongoing_votes.length; i++)
+            {
+                document.write("<form action='/view_vote_result' method='POST' enctype='application/x-www-form-urlencoded'>");
+                document.write(ongoing_votes[i].name + "&nbsp&nbsp&nbsp" + ongoing_votes[i].startDate + "&nbsp&nbsp&nbsp" + ongoing_votes[i].endDate + "&nbsp&nbsp&nbsp");
+                document.write("<input type='hidden' name='vote_id' value=" + ongoing_votes[i].name + ">");
+                document.write("<input type='submit' value='View State'>");
+                document.write("</form> <br>");
+            }
+
+            document.write("<br><br>");
+
+            document.write("<h2>ended votes</h2>");
+            for(var i=0; i<ended_votes.length; i++)
+            {
+                document.write(ended_votes[i].name + "&nbsp&nbsp&nbsp" + ended_votes[i].startDate + "&nbsp&nbsp&nbsp" + ended_votes[i].endDate + "&nbsp&nbsp&nbsp");
+
+                var button_html = "<input type='button' value='View Result'>"
+                document.write("<input type='hidden' name='vote_id' value=" + ended_votes[i].name + ">");
+                document.write("<input type='submit' value='View State'>");
+                document.write("</form> <br>");
+            }
+            
+        </script>
+
+	</body>
+</html>
+

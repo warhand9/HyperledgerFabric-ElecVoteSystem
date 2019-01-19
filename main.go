@@ -1,12 +1,11 @@
 package main
 
 import (
-	"fmt"
+//	"fmt"
 	"net/http"
-	"fmt"
 )
 
-func main() {
+func main_temp() {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir("templates")))
 

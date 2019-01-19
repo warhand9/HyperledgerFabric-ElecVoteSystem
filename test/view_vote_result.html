@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            var jsonString = {{.}};
+            var voteResult = JSON.parse(jsonString);
+
+            function User_response(name, region, response)
+            {
+                this.name = name;
+                this.region = region;
+                this.response = response;
+            }
+            function Vote(name, startDate, endDate, user_responses)
+			{
+				// Vote Object attributes
+				this.name = name;
+				this.startDate = startDate;
+				this.endDate = endDate;
+				this.user_responses = user_responses;
+			}
+
+            var temp_user_responses = new Array();
+            for(var j=0; j<voteResult.User_responses.length; j++){
+                temp_user_responses[j] = new User_response(voteResult.User_responses[j].Name, voteResult.User_responses[j].Region, voteResult.User_responses[j].Response);
+            }
+            
+            var vote = new Vote(voteResult.Name, voteResult.StartDate, voteResult.EndDate, temp_user_responses);
+
+            // test print
+            document.write(vote.name + " " + vote.startDate + " " + vote.endDate + "<br>");
+            for(var i=0; i<vote.user_responses.length; i++)
+            {
+                document.write(vote.user_responses[i].name + " " + vote.user_responses[i].region + " " + vote.user_responses[i].response);
+                document.write("<br>");
+            }
+
+            // make region array using Region count
+            var region = new Array();
+            region[0] = new Array();    // Deameong result
+            region[1] = new Array();    // Suseong result
+
+            // divide from Region
+            for(var i=0; i<vote.user_responses.length; i++)
+            {
+                if(vote.user_responses[i].region == "Daemeong")
+                {
+                    region[0].push(vote.user_responses[i]);
+                }
+                else
+                {
+                    region[1].push(vote.user_responses[i]);
+                }
+            }
+            
+        </script>
+    </head>
+
+    <body>
+
+        <hr><hr>
+
+        <script>
+            document.write("<h1>" + vote.name + "</h1><br>");
+            document.write("<h2> Daemeong Results </h2>");
+            for(var i=0; region[0].length; i++)
+            {
+                document.write(region[0][i].name + " " + region[0][i].response + "<br>");
+            }
+           // document.write("<h2> Suseong Results </h2>");
+        </script>
+        
+        <hr>
+
+        <script>
+            document.write("<h2> Suseong Results </h2>");
+            for(var i=0; region[1].length; i++)
+            {
+                document.write(region[1][i].name + " " + region[1][i].response + "<br>");
+            }
+        </script>
+    </body>
+</html>
