@@ -2,17 +2,27 @@
 <html>
 	<head>
 		<script>
+			//document.write("test" + {{.}}+ "<br>");
             var jsonString = {{.}};
-            var strings = jsonString.split("splitSeparator"); 
-            var voteResult = JSON.parse(strings[0]);
-            var userCounts = JSON.parse(strings[1]);
+            //document.write(jsonString);
+            var voteResult = JSON.parse(jsonString);
 
+            //var testObj = voteResult.Vote_Results[0];
+            //document.write(testObj.User_responses[0].Name);
+
+            function User_response(name, region, response)
+            {
+                this.name = name;
+                this.region = region;
+                this.response = response;
+            }
             function Vote(name, startDate, endDate, user_responses)
 			{
 				// Vote Object attributes
 				this.name = name;
 				this.startDate = startDate;
 				this.endDate = endDate;
+				this.user_responses = user_responses;
 			}
 
             function compare_date(voteEndDate)  // curEndDate :: "2019/01/17" format
@@ -36,39 +46,41 @@
                 }
             }
 
-            function getUserCountsByRegion(region)
-            {
-                for(var i=0; i<userCounts.length; i++)
-                {
-                    if(userCounts[i].Region == region)
-                    {
-                        return userCounts[i].Count;
-                    }
-                }
-
-                return -1;
-            }
 		</script>
 	</head>
 
 	<body>	
 
         <script>
+            //document.write(jsonString + "<br>");
+            //document.write(voteResult.Vote_Results.length + "<br>");
             var ongoing_votes = new Array();
 			var ended_votes = new Array();
 			var o=0, e=0;
-			for(var i=0; i<voteResult.length; i++) {
+			for(var i=0; i<voteResult.Vote_Results.length; i++) {
                 // vote JSON object
-                var temp_vote = voteResult[i];
+                var temp_vote = voteResult.Vote_Results[i];
 
                 // compare Vote_EndDate with current_date
 				if(compare_date(temp_vote.EndDate)== 0) {
-					ongoing_votes[o++] = new Vote(temp_vote.Name, temp_vote.StartDate, temp_vote.EndDate);
+
+                    // make User_responses Array about this Vote
+                    var temp_user_responses = new Array();
+                    for(var j=0; j<temp_vote.User_responses.length; j++){
+                        temp_user_responses[j] = new User_response(temp_vote.User_responses[j].Name, temp_vote.User_responses[j].Region, temp_vote.User_responses[j].Response);
+                    }
+
+					ongoing_votes[o++] = new Vote(temp_vote.Name, temp_vote.StartDate, temp_vote.EndDate, temp_user_responses);
 				}
 
                 // vote date expired
                 else{
-					ended_votes[e++] = new Vote(temp_vote.Name, temp_vote.StartDate, temp_vote.EndDate);
+                    var temp_user_responses = new Array();
+                    for(var j=0; j<temp_vote.User_responses.length; j++){
+                        temp_user_responses[j] = new User_response(temp_vote.User_responses[j].Name, temp_vote.User_responses[j].Region, temp_vote.User_responses[j].Response);
+                    }
+
+					ended_votes[e++] = new Vote(temp_vote.Name, temp_vote.StartDate, temp_vote.EndDate, temp_user_responses);
                 }  
 
 			}
@@ -91,30 +103,13 @@
             {
 
                 document.write("<form action=\"/view_vote_result\" method=\"POST\" enctype=\"application/x-www-form-urlencoded\">");
-                document.write(ended_votes[i].name + "&nbsp&nbsp&nbsp" + ended_votes[i].startDate + "&nbsp&nbsp&nbsp" + ended_votes[i].endDate + "&nbsp&nbsp&nbsp");
+                document.write(ended_votes[i].namee + "&nbsp&nbsp&nbsp" + ended_votes[i].startDate + "&nbsp&nbsp&nbsp" + ended_votes[i].endDate + "&nbsp&nbsp&nbsp");
                 document.write("<input type=\"hidden\" name=\"voteID\" value=" + ended_votes[i].name + ">");
                 //document.write("<input type=\"hidden\" id=\"voteID\" name=\"voteID\" value=\"vote_1\">");
                 document.write("<input type=\"submit\" value=\"View Result\">");
                 document.write("</form> <br>");
             }
             
-        </script>
-
-        <h4>user count information</h4>
-        <script>
-            var total=0;
-            for(var i=0; i<userCounts.length; i++)
-            {
-                total += userCounts[i].Count;
-            }
-            document.write("total people : " + total + "<br>");
-
-            for(var i=0; i<userCounts.length; i++)
-            {
-                var temp_region = userCounts[i].Region;
-                document.write(temp_region + " => " + getUserCountsByRegion(temp_region) + " peoples");
-                document.write("<br>");
-            }
         </script>
 
 	</body>
