@@ -1,13 +1,8 @@
 package main
 
-import (
-	"net/http"
-	"html/template"
 //	"time"
-	"fmt"
-)
 
-func login(w http.ResponseWriter, r *http.Request) {
+/*func login(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	fmt.Println("userID: ", r.Form["userID"])
@@ -15,8 +10,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	// get from Chaincode
 	user_state := 0
-	
-	if user_state==1 {
+
+	if user_state == 1 {
 		t, _ := template.ParseFiles("test/user_menu.html")
 		t.Execute(w, "user")
 	} else {
@@ -25,3 +20,4 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+*/
