@@ -26,7 +26,7 @@ type EveryVote struct {
 
 func main() {
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.Dir("templates")))
+	mux.Handle("/", http.FileServer(http.Dir("mainIndex")))
 
 	mux.HandleFunc("/login", login)
 	//	mux.HandleFunc("/signup", signup)
@@ -45,6 +45,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("userID: ", r.Form["userID"])
 	fmt.Println("userPW: ", r.Form["userPW"])
+
+	fmt.Println("sex1: ", r.Form["voteID"])
 
 	// get from Chaincode
 	user_state := 0
@@ -114,6 +116,8 @@ func view_result(w http.ResponseWriter, r *http.Request) {
 }
 
 func view_vote_result(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("vote ID: ", r.Form["vote_id"])
+
 	vote_result := Vote{
 		Name:      "Daetongyeong_2019_vote",
 		StartDate: "2019/01/17",
