@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Enroll Vote </title>
+        <script>
+            var article_cnt=0;
+
+            function cancle()
+            {
+                alert("cancled!");
+                window.location.replace='admin_menu.html';
+            }
+
+            function add_article()
+            {
+                //article_cnt++;
+                var ol = document.getElementById("articles");
+
+                var li = document.createElement("LI");
+                var input_tag = document.createElement("INPUT");
+                input_tag.setAttribute("type", "text");
+                var temp_id = "input" + article_cnt;
+                article_cnt++;
+                input_tag.setAttribute("id", temp_id );
+
+                /*var delete_btn = document.createElement("INPUT");
+                delete_btn.setAttribute("type", "button");
+                delete_btn.setAttribute("value", "delete");
+                delete_btn.setAttribute("onclick", "delete_article()");*/
+
+
+                li.appendChild(input_tag);
+                //li.appendChild(delete_btn);
+
+                ol.appendChild(li);
+            }
+
+            function delete_article()
+            {
+                article_cnt--;
+
+                var ol = document.getElementById("articles");
+                // delete last article
+                ol.removeChild(ol.childNodes[article_cnt]);
+            }
+
+            function makeArticlesString()
+            {
+                //var articlesString=""
+                var articles = new Array();
+
+                for(var i=0; i<article_cnt; i++)
+                {
+                    var temp_id = "input"+i     // input tag ID : ex) input1, input2, ...
+                    var domObj = document.getElementById(temp_id);
+                    /*articlesString += domObj.value;
+
+                    if((i+1)<article_cnt)
+                        articlesString += "/";*/
+
+                    articles.push(domObj.value);
+                }
+                //document.getElementById("demo").innerHTML = articlesString;
+                //return articlesString;
+                return articles;
+            }
+
+
+            var httpRequest;
+
+            function enroll()
+            {
+                //document.getElementById("demo").innerHTML = "test";
+                var articles = makeArticlesString();
+
+                //DEBUG
+                //document.getElementById("demo").innerHTML = articles;
+                
+                httpRequest = new XMLHttpRequest();
+                httpRequest.responseType = 'text';
+                var url = '/enroll_vote';
+                httpRequest.open('POST', url);
+
+                var voteName = document.getElementById("voteName").value;
+                var endDate = document.getElementById("endDate").value;
+                // var articlesString
+
+                // create javascript Object
+                var jsonData = {
+                    "VoteName" : voteName,
+                    "EndDate" : endDate,
+                    "Articles" : articles,
+                };
+                httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                document.getElementById("demo").innerHTML = JSON.stringify(jsonData);
+                httpRequest.send(JSON.stringify(jsonData));
+                
+                httpRequest.onreadystatechange = enrollsuccess;
+                
+            }
+
+            function enrollsuccess()
+            {
+                try {
+                    if (httpRequest.readyState == XMLHttpRequest.DONE) {
+                        if (httpRequest.status == 200) {
+                            alert(httpRequest.responseText);
+                        } else {
+                            alert("Request Problem");
+                        }
+                    }
+                } catch(e) {
+                    alert("Caught ExeptionOn: " + e.description);
+                }
+
+                /*var responseString = httpRequest.response;
+                //var responseString = httpRequest.responseText;
+                alert(responseString);
+                //alert(httpRequest.responseText);*/
+
+                window.location.replace='admin_menu.html';  // href 대신 replace 사용!
+            }
+
+        </script>
+    </head>
+
+    <body>
+
+        <h3> Enroll Vote</h3>
+        <hr>
+
+        <script>/*  // Form 태그 사용했을때... but, 여기서는 form submit보다는 AJAX쓰는게 맞는거 같음
+        <form action="/enroll_vote" method="POST" enctype="application/x-www-form-urlencoded">
+            Vote Name : <input type="text" name="userID" value="" size=10> <br>
+            End Date : <input type="date" name="endDate" value=""><br>
+            
+            Input Article::&nbsp;&nbsp; 
+            <input type="button" value="Add Article" onclick="add_article()"> &nbsp;&nbsp; 
+            <input type="button" value="Delete Article" onclick="delete_article()"> <br>
+            <ol id="articles"></ol>
+
+            <!--Article 내용을 배열로 만들어서 hidden tag로 서버로 전달-->
+            <input type="hidden" name="voteArticles" value="">
+
+            <br>
+
+            <input type="submit" value="ENROLL">&nbsp;&nbsp;&nbsp; 
+            <input type="button" value="CANCLE" onclick="cancle()">
+
+        </form>
+        */</script>
+    
+        Vote Name : <input type="text" id="voteName" value="" size=10> <br>
+        End Date : <input type="date" id="endDate" value=""><br>
+        Input Article::&nbsp;&nbsp; 
+        <input type="button" value="Add Article" onclick="add_article()"> &nbsp;&nbsp; 
+        <input type="button" value="Delete Article" onclick="delete_article()"> <br>
+        <ol id="articles"></ol>
+
+        <br>
+
+        <input type="submit" value="ENROLL" onclick="enroll()">&nbsp;&nbsp;&nbsp; 
+        <input type="button" value="CANCLE" onclick="cancle()">
+        
+        <!--for DEBUG??-->
+        <hr>
+        <p id="demo"></p>
+		<script>
+			document.getElementById("demo").innerHTML = 
+				"Page location is: " + window.location.href + "<br>" + 
+				"Page hostname is: " + window.location.hostname + "<br>" + 
+				"Page path is: " + window.location.pathname;
+		</script>
+
+    </body>
+</html>

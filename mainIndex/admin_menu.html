@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    <!--cancle 기능을 위해 test directory에 있는 admin_menu.html 잠시 가져옴..-->
 	<head>
 		<title> Elect Vote System </title>
 		<script>
@@ -19,7 +20,7 @@
 		
 		<br>
  
-		<!--form 태그로 감싸니까, 클릭해도 onclick 함수 실행안되네..-->
+        <!--form 태그로 감싸니까, 클릭해도 onclick 함수 실행안되네..-->
 		<button onclick="enroll_vote()">Enroll Vote</button>
 
 		<br>
@@ -27,14 +28,5 @@
 		<form action="/membership_manage" method="POST" enctype="applicatio/x-www-form-urlencoded">
 			<input type="submit" value="Membership Management">
 		</form>
-
-		<p id="demo"></p>
-		<script>
-			document.getElementById("demo").innerHTML = 
-				"Page location is: " + window.location.href + "<br>" + 
-				"Page hostname is: " + window.location.hostname + "<br>" + 
-				"Page path is: " + window.location.pathname;
-		</script>
-
 	<body>
 </html>

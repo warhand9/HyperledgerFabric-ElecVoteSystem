@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            var jsonString = {{.}};
+            var users = JSON.parse(jsonString);
+            //document.getElementById("demo").innerHTML = jsonString;
+            //document.write(jsonString);
+
+            //
+            var regions = new Array();  //String Array
+            function regionNotExist(regionName)
+            {
+                for(var i=0; i<regions.length; i++)
+                {
+                    if(regions[i]==regionName)
+                        return false;
+                }
+                return true;
+            }
+            
+            //function getRegions()
+            for(var i=0; i<users.length; i++)
+            {
+                if(regionNotExist(users[i].Region))
+                {
+                    regions.push(users[i].Region);
+                }
+            }
+
+            //
+
+            var userInfo = new Array(regions.length);
+            for(var i=0; i<userInfo.length; i++)
+            {
+                userInfo[i] = new Array();
+            }
+
+            function User(name, unum, id, pw, region)
+            {   // User Struct
+                this.name = name;
+                this.unum = unum;
+                this.id = id;
+                this.pw = pw;
+                this.region = region;
+            }
+            
+            function getIndexByRegion(regionName)
+            {
+                for(var i=0; i<regions.length; i++)
+                {
+                    if (regions[i] == regionName)
+                        return i;
+                }
+                return -1;
+            }
+            for(var i=0; i<users.length; i++)
+            {
+                var idx = getIndexByRegion(users[i].Region);
+                var tempUser = new User(users[i].Name, users[i].Unum, users[i].ID, users[i].PW, users[i].Region);
+                userInfo[idx].push(tempUser);
+            }    
+
+           /* function deleteMembership(delName)
+            {
+                var res = alert(delName + " 삭제하시겠습니까?");
+                alert(res);
+            }*/
+            function deleteMembership(para)
+            {
+                var test = "name";
+                var res = confirm(para + " 삭제하시겠습니까?");
+                alert("you choose" + res);
+            }
+        </script>
+    </head>
+
+    <body>
+        <h1>Membership Management</h1>
+        <hr><hr>
+
+        <script>
+            for(var i=0; i<regions.length; i++)
+            {
+                document.write("<h2>" + regions[i] + " Membership </h2>");
+                for(var j=0; j<userInfo[i].length; j++)
+                {
+                document.write("<form action=\"/whatwhatwhat...\" method=\"POST\" enctype=\"application/x-www-form-urlencoded\">");
+                document.write(userInfo[i][j].name + "&nbsp/&nbsp" + userInfo[i][j].id + "&nbsp/&nbsp" + userInfo[i][j].pw + "&nbsp/&nbsp" + userInfo[i][j].region + "&nbsp&nbsp&nbsp");
+                document.write("<input type=\"hidden\" name=\"userInfo\" value=" + userInfo[i][j].name + ">");
+
+                document.write("<input type=\"submit\" value=\"Modify\">" + "&nbsp&nbsp&nbsp");
+                document.write("<input type=\"button\" value=\"Delete\" onclick=\"deleteMembership(\'" + userInfo[i][j].name + "\')\">");
+                //document.write("<input type=\"button\" value=\"Delete\" onclick=\"deleteMembership('name')\">");
+                document.write("</form> <br>");
+
+                }
+            }
+        </script>
+
+
+
+        <!--for DEBUG??-->
+        <hr>
+        <p id="demo"></p>
+		<script>
+			document.getElementById("demo").innerHTML = 
+				"Page location is: " + window.location.href + "<br>" + 
+				"Page hostname is: " + window.location.hostname + "<br>" + 
+				"Page path is: " + window.location.pathname;
+		</script>
+    </body>
+</html>
