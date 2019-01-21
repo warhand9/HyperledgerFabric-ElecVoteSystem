@@ -51,9 +51,13 @@ type UserCount struct {
 
 func main() {
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.Dir("mainIndex")))
+	//mux.Handle("/", http.FileServer(http.Dir("mainIndex")))
 
+<<<<<<< HEAD
 	//mux.HandleFunc("/", indexFunc)
+=======
+	mux.HandleFunc("/", indexFunc)
+>>>>>>> 983e775fcd2d43c73f9863678ee9ef79613e5c39
 	mux.HandleFunc("/login", login)
 	//	mux.HandleFunc("/signup", signup)
 
@@ -63,7 +67,16 @@ func main() {
 	mux.HandleFunc("/enroll_vote", enroll_vote)
 	mux.HandleFunc("/membership_manage", membership_manage)
 
+<<<<<<< HEAD
 	http.ListenAndServe(":8084", mux)
+=======
+	http.ListenAndServe(":8081", mux)
+}
+
+func indexFunc(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("mainIndex/index.html")
+	t.Execute(w, "test")
+>>>>>>> 983e775fcd2d43c73f9863678ee9ef79613e5c39
 }
 
 /*func indexFunc(w http.ResponseWriter, r *http.Request) {
